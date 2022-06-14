@@ -49,6 +49,16 @@ class Customer extends AbstractModel implements CustomerInterface
     public const COOKIE_NAME = '2c_cId';
 
     /**
+     * Initialize resource model
+     *
+     * @return void
+     */
+    public function _construct()
+    {
+        $this->_init(NostoCustomer::class);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getCustomerId()
@@ -126,16 +136,6 @@ class Customer extends AbstractModel implements CustomerInterface
     public function setUpdatedAt(DateTime $updatedAt)
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
-    }
-
-    /**
-     * Initialize resource model
-     *
-     * @return void
-     */
-    public function _construct()
-    {
-        $this->_init(NostoCustomer::class);
     }
 
     /**

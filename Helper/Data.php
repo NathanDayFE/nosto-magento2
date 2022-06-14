@@ -144,11 +144,6 @@ class Data extends AbstractHelper
     public const XML_PATH_TAG_DATE_PUBLISHED = 'nosto/flags/tag_date_published';
 
     /**
-     * Path to the configuration object that stores customer reference
-     */
-    public const XML_PATH_TRACK_MULTI_CHANNEL_ORDERS = 'nosto/flags/track_multi_channel_orders';
-
-    /**
      * Path to the configuration object that stores preference for reloading recs after adding product to cart
      */
     public const XML_PATH_RELOAD_RECS_AFTER_ATC = 'nosto/flags/reload_recs_after_atc';
@@ -172,11 +167,6 @@ class Data extends AbstractHelper
      * Path to the configuration object for multi currency
      */
     public const XML_PATH_MULTI_CURRENCY = 'nosto/multicurrency/method';
-
-    /**
-     * @var string Nosto customer reference attribute name
-     */
-    public const NOSTO_CUSTOMER_REFERENCE_ATTRIBUTE_NAME = 'nosto_customer_reference';
 
     /**
      * Values for ratings settings
@@ -426,17 +416,6 @@ class Data extends AbstractHelper
     public function isSendCustomerDataToNostoEnabled(StoreInterface $store = null)
     {
         return (bool)$this->getStoreConfig(self::XML_PATH_SEND_CUSTOMER_DATA, $store);
-    }
-
-    /**
-     * Returns if orders want to be tracked from various channels
-     *
-     * @param StoreInterface|null $store
-     * @return bool
-     */
-    public function isMultiChannelOrderTrackingEnabled(StoreInterface $store = null)
-    {
-        return (bool)$this->getStoreConfig(self::XML_PATH_TRACK_MULTI_CHANNEL_ORDERS, $store);
     }
 
     /**

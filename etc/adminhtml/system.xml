@@ -215,14 +215,6 @@
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="track_multi_channel_orders" translate="label comment" type="select" sortOrder="140"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Track orders from multiple channels</label>
-                    <comment>
-                        <![CDATA[Set this yes if you want to track multi-channel orders]]>
-                    </comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
                 <field id="reload_recs_after_atc" translate="label comment" type="select" sortOrder="150"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Reload recs after reloading cart</label>

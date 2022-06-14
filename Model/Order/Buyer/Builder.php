@@ -59,8 +59,7 @@ class Builder extends PersonBuilder
         string $country = null,
         string $customerGroup = null,
         string $dateOfBirth = null,
-        string $gender = null,
-        string $customerReference = null
+        string $gender = null
     ) {
         $buyer = new Buyer();
         $buyer->setFirstName($firstName);

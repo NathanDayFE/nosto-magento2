@@ -203,29 +203,6 @@ class Save implements ObserverInterface
     }
 
     /**
-     * @param Order $order
-     * @return string|null
-     */
-    private function getCustomerReference(Order $order)
-    {
-        $customerId = $order->getCustomerId();
-        $nostoCustomerId = null;
-        try {
-            $magentoCustomer = $this->magentoCustomerRepository->getById($customerId);
-            // Get the value of `customer_reference`
-            $customerReferenceAttribute = $magentoCustomer->getCustomAttribute(
-                NostoHelperData::NOSTO_CUSTOMER_REFERENCE_ATTRIBUTE_NAME
-            );
-            if ($customerReferenceAttribute !== null) {
-                $nostoCustomerId = $customerReferenceAttribute->getValue();
-            }
-        } catch (Exception $e) {
-            $this->logger->exception($e);
-        }
-        return $nostoCustomerId;
-    }
-
-    /**
      * Send new order to Nosto
      *
      * @param Order $order
@@ -237,18 +214,8 @@ class Save implements ObserverInterface
         /** @var NostoCustomer $nostoCustomer */
         $nostoCustomer = $this->customerRepository
             ->getOneByQuoteId($order->getQuoteId());
-        $nostoCustomerId = null;
+        $nostoCustomerId = $nostoCustomer->getNostoId();
         $nostoCustomerIdentifier = NostoOrderCreate::IDENTIFIER_BY_CID;
-        if ($nostoCustomer instanceof NostoCustomer) {
-            $nostoCustomerId = $nostoCustomer->getNostoId();
-        }
-        // If the id is still null, fetch the `customer_reference`
-        if ($nostoCustomerId === null &&
-            $this->nostoHelperData->isMultiChannelOrderTrackingEnabled($store)
-        ) {
-            $nostoCustomerId = $this->getCustomerReference($order);
-            $nostoCustomerIdentifier = NostoOrderCreate::IDENTIFIER_BY_REF;
-        }
         $nostoOrder = $this->nostoOrderBuilder->build($order);
         $nostoOrder->setCustomer(new Buyer()); // Remove customer data from order API calls
         if ($nostoCustomerId !== null) {

@@ -48,7 +48,6 @@ use Nosto\Tagging\Helper\Data as NostoHelperData;
 use Nosto\Tagging\Logger\Logger as NostoLogger;
 use Nosto\Tagging\Model\Email\Repository as NostoEmailRepository;
 use Nosto\Tagging\Model\Person\Builder as PersonBuilder;
-use Nosto\Tagging\Util\Customer as CustomerUtil;
 
 /**
  * Builder class for buyer
@@ -96,13 +95,12 @@ class Builder extends PersonBuilder
         string $firstName,
         string $lastName,
         string $email,
-        string $phone = null,
-        string $postCode = null,
-        string $country = null,
-        string $customerGroup = null,
-        string $dateOfBirth = null,
-        string $gender = null,
-        string $customerReference = null
+        ?string $phone = null,
+        ?string $postCode = null,
+        ?string $country = null,
+        ?string $customerGroup = null,
+        ?string $dateOfBirth = null,
+        ?string $gender = null
     ) {
         $customer = new Customer();
         $customer->setFirstName($firstName);
@@ -112,7 +110,6 @@ class Builder extends PersonBuilder
         $customer->setPostCode($postCode);
         $customer->setCountry($country);
         $customer->setCustomerGroup($customerGroup);
-        $customer->setCustomerReference($customerReference);
         $customer->setGender($gender);
         if ($dateOfBirth !== null) {
             $customer->setDateOfBirth(DateTime::createFromFormat('Y-m-d', $dateOfBirth));
@@ -133,7 +130,6 @@ class Builder extends PersonBuilder
             $customer = $currentCustomer->getCustomer();
             $customerGroup = $this->getCustomerGroupName($customer);
             $gender = $this->getGenderName($customer);
-            $customerReference = $this->getCustomerReference($currentCustomer);
 
             /** @noinspection PhpIncompatibleReturnTypeInspection */
             return $this->build(
@@ -145,8 +141,7 @@ class Builder extends PersonBuilder
                 null,
                 $customerGroup,
                 $customer->getDob(),
-                $gender,
-                $customerReference
+                $gender
             );
         } catch (Exception $e) {
             $this->logger->exception($e);
@@ -183,37 +178,5 @@ class Builder extends PersonBuilder
             default:
                 return null;
         }
-    }
-
-    /**
-     * @param CurrentCustomer $currentCustomer
-     * @return string
-     */
-    private function getCustomerReference(CurrentCustomer $currentCustomer)
-    {
-        $customerReference = '';
-
-        try {
-            $customer = $currentCustomer->getCustomer();
-            $customerReference = $customer->getCustomAttribute(
-                NostoHelperData::NOSTO_CUSTOMER_REFERENCE_ATTRIBUTE_NAME
-            );
-
-            if ($customerReference === null) {
-                $customerUtil = new CustomerUtil();
-                $customerReference = $customerUtil->generateCustomerReference($customer);
-                $customer->setCustomAttribute(
-                    NostoHelperData::NOSTO_CUSTOMER_REFERENCE_ATTRIBUTE_NAME,
-                    $customerReference
-                );
-                $this->customerRepository->save($customer);
-                return $customerReference;
-            }
-            return $customerReference->getValue();
-        } catch (Exception $e) {
-            $this->logger->exception($e);
-        }
-
-        return $customerReference;
     }
 }
